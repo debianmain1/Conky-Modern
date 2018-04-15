@@ -1,0 +1,125 @@
+conky.config = {
+
+-- Conky by Dean Loros
+-- Conky settings #
+	background = false,
+	update_interval = 1,
+
+	cpu_avg_samples = 2,
+	net_avg_samples = 2,
+	temperature_unit = 'celsius',
+
+	double_buffer = true,
+	no_buffers = true,
+	text_buffer_size = 2048,
+
+-- Window specifications #
+	own_window = true,
+	own_window_class = 'conky',
+	own_window_argb_visual = true,
+	own_window_argb_value = 80,
+	own_window_hints = 'undecorated,below,sticky,skip_taskbar,skip_pager',
+	own_window_colour = '#484B52',
+	background = false,
+
+-- Alignment #
+	border_inner_margin = 0,
+	border_outer_margin = 0,
+	alignment = 'top_right',
+	minimum_width = 250, minimum_height = 1080,
+	maximum_width = 300,
+        gap_x = 0,
+        gap_y = 20,
+
+-- Graphics settings #
+	draw_shades = false,
+	draw_outline = false,
+	draw_borders = true,
+	draw_graph_borders = true,
+
+-- Text settings #
+	override_utf8_locale = true,
+	use_xft = true,
+        font = 'Denton:size=8',
+	xftalpha = 0.5,
+	uppercase = false,
+
+-- Color scheme #
+        color0 = 'FFFFFF',
+        color1 = '062b61', 
+        color2 = '000000', 
+        color3 = 'DE3D00', 
+        color4 = 'dcde1c', 
+        color5 = '0a57a4',
+        color6 = '06FF1C',
+        color7 = 'A40810', 
+};
+
+conky.text = [[
+${color3}${hr 3}
+${voffset 5}${offset 15}${font Denton:size=36}${color1}${time %e}
+${goto 25}${font Denton:size=18}${color5}${voffset -30}${time %b}${color FFFFFF}${offset 10}${time %Y}
+${font Denton:size=12}${color1}${voffset 5}${goto 20}${time %A}${goto 153}${color5}${time %H}:${time %M}
+${image ~/.conky/img/debian-logo.png -p 180,15 -s 50x50}${voffset -10}
+${color3}${hr 3}${color1}
+${goto 10}${font}${exec cat /etc/issue.net}
+${goto 10}${exec cat /proc/cpuinfo|grep 'model name'|sed -e 's/model name.*: //'| uniq | cut -c 1-32}
+${goto 10}KERNEL:  $kernel
+${goto 10}CPU SPEED: ${freq_g 4}${goto 140}GHz
+${color3}${hr 3}${color5}${font Denton:size=9}
+${color1}${voffset 15}${goto 15}CPU 0${goto 70}${cpubar cpu0}${color0}
+${goto 18}${cpu cpu0}%${goto 120}${execi 30 sensors|grep 'Core 0'| awk -F'+' '{print $2}' | awk -F'.' '{print $1}'} °C
+
+${color1}${goto 15}CPU1${goto 70}${cpubar cpu1}${color0}
+${goto 18}${cpu cpu1}%${goto 120}${execi 30 sensors|grep 'Core 1'| awk -F'+' '{print $2}' | awk -F'.' '{print $1}'} °C
+
+${color1}${goto 15}CPU2${goto 70}${cpubar cpu2}${color0}
+${goto 18}${cpu cpu2}%${goto 120}${execi 30 sensors|grep 'Core 2'| awk -F'+' '{print $2}' | awk -F'.' '{print $1}'} °C
+
+${color1}${goto 15}CPU3${goto 70}${cpubar cpu3}${color0}
+${goto 18}${cpu cpu3}%${goto 120}${execi 30 sensors|grep 'Core 3'| awk -F'+' '{print $2}' | awk -F'.' '{print $1}'} °C
+${voffset 5}${goto 15}${color5}${top name 1}${goto 145}${top cpu 1}%
+${goto 15}${font}${color2}${top name 2}${goto 145}${top cpu 2}%
+${goto 15}${color1}${top name 3}${goto 145}${top cpu 3}%
+${goto 15}${color1}${top name 4}${goto 145}${top cpu 4}%
+${color3}${hr 3}
+
+${voffset -5}${goto 115}${color2}UPTIME:  ${color0}${uptime_short}${voffset 10}
+${goto 115}${color2}PROCESSES:  ${color0}${processes}${voffset 10}
+${goto 115}${color2}RUNNING:  ${color0}${running_processes}
+
+${voffset -75}${goto 15}${color1}${font Denton:size=9}RAM:
+${goto 18}${color0}${memperc}%
+
+${voffset -60}${goto 15}${voffset 56}${color1}SWAP:
+${goto 18}${color0}${swapperc}%
+${color3}${hr 3}${color5}
+${goto 15}${voffset 10}${color1}/ROOT
+${goto 10}${color2}USED:${color0}${goto 100}${fs_used /}
+${goto 10}${color2}FREE:${color0}${goto 100}${fs_size /}
+${goto 15}${voffset 10}${color1}/HOME
+${goto 10}${color2}USED:${color0}${goto 100}${fs_used /home}
+${goto 10}${color2}FREE:${color0}${goto 100}${fs_size /home}
+${goto 15}${voffset 10}${color1}/STORAGE
+${goto 10}${color2}USED:${color0}${goto 100}${fs_used /media/Storage}
+${goto 10}${color2}FREE:${color0}${goto 100}${fs_used /media/Storage}
+${color3}${hr 3}${color5}
+${voffset 10}${goto 15}${color1}CONNECTIONS:
+${goto 10}${color2}DOWNSPEED:${color0}${goto 125}${downspeed bond0} ${goto 170}/  ${totaldown bond0}
+${offset 10}${color6}${downspeedgraph bond0 20,230 06FF1C 06FF1C s}
+${goto 10}${color2}UPSPEED:${color0}${goto 125}${upspeed bond0} ${goto 170}/  ${totalup bond0}
+${offset 10}${color7}${upspeedgraph bond0 20,230 A40810 A40810 s}
+${goto 15}${color2}Wan:${color0}${goto 90}${execi 3600 wget -q -O - checkip.dyndns.org | sed -e 's/[^[:digit:]\|.]//g'}
+${goto 15}${color2}Lan:${color0}${goto 90}${addr bond0}
+${goto 15}${color2}Inbound Ports:${color0}${goto 180}${tcp_portmon 1 32767 count}
+${goto 15}${color2}Outbound Ports:${color0}${goto 180}${tcp_portmon 32768 61000 count}
+
+${goto 10}${color2}IP:  ${color0}${tcp_portmon 1 65535 rip  0}
+${goto 35}${tcp_portmon 1 65535 rip  1}
+${goto 35}${tcp_portmon 1 65535 rip  2}
+${goto 35}${tcp_portmon 1 65535 rip  3}
+${goto 35}${tcp_portmon 1 65535 rip  4}
+${goto 35}${tcp_portmon 1 65535 rip  5}
+
+${color3}${hr 3}
+]];
